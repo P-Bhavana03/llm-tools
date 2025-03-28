@@ -1,5 +1,6 @@
 import time
 from typing import List
+import uuid
 from langchain_google_genai import ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.schema import Document
 from app.utils.vector_store import get_vector_store
@@ -41,6 +42,10 @@ class RAGService:
 
 # async def execute_rag_query(prompt: str) -> List[str]:
 #     service = RAGService()
+from langgraph.checkpoint.memory import MemorySaver, InMemorySaver
+
+# from langchain.agents import AgentExecutor, create_react_agent, tool
+memory = MemorySaver()
 
 
 async def execute_query(prompt: str):
@@ -51,13 +56,13 @@ async def execute_query(prompt: str):
 
     from langgraph.prebuilt import create_react_agent
 
-    # agent with selected tools
-    agent = create_react_agent(
-        service.llm,
-        tools=selected_tools,
-    )
+    # thread_id = uuid.uuid4()
+    config = {"configurable": {"thread_id": "1234"}}
 
-    result = await agent.ainvoke({"messages": [("user", prompt)]})
+    # agent with selected tools
+    agent = create_react_agent(service.llm, tools=selected_tools, checkpointer=memory)
+
+    result = await agent.ainvoke({"messages": [("user", prompt)]}, config)
     for message in result["messages"]:
         message.pretty_print()
 
