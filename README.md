@@ -61,3 +61,11 @@ app/
 - ChromaDB vector store for function tool embeddings
 - Google GenAI integration
 - Proper FastAPI project structure
+
+## Showcase
+
+![Calculator Tool Example](screenshots/calculator_tool.png)
+_Example of the calculator tool being retrieved_
+
+![RAM Usage](screenshots/ram_usage.png)
+_Example of ram usage tool being used_
