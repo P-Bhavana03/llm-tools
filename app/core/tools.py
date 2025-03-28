@@ -21,7 +21,7 @@ def get_ram_usage():
 
 
 def open_chrome():
-    """Open Google Chrome browser to google.com"""
+    """Open Google Chrome browser"""
     webbrowser.open()
 
 
@@ -100,28 +100,20 @@ def create_pydantic_model_from_function(
 
         param_type = param.annotation
         if param_type is inspect.Parameter.empty:
-
             print(
                 f"Warning: Argument '{name}' in function '{func.__name__}' is missing a type annotation. Defaulting to 'Any'."
             )
             param_type = Any
-
         description = doc_params.get(name)
-
         if param.default is inspect.Parameter.empty:
-
             field_definition = Field(..., description=description)
         else:
-
             field_definition = Field(default=param.default, description=description)
-
         fields[name] = (param_type, field_definition)
 
     if model_name is None:
         model_name = f"{func.__name__.capitalize()}Input"
-
     DynamicModel = create_model(model_name, **fields)
-
     DynamicModel.__doc__ = f"Input model for the function '{func.__name__}'.\n\n{inspect.getdoc(func) or ''}"
 
     return DynamicModel
